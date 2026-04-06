@@ -1,0 +1,30 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Data
+data/
+*.csv
+*.pcap
+*.zip
+
+# IDE & OS
+.vscode/
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+cmake-build-*/
+out/
+
+# Model Checkpoints
+*.pkl
+*.joblib
+*.pth
