@@ -15,7 +15,7 @@ class IoTEda:
         self.fitted = False
 
     def run_integrated_analysis(self, df, output_dir="./results/eda"):
-        # --- DIRECTORY HANDLING ---
+
         if not os.path.exists(output_dir):
             os.makedirs(output_dir, exist_ok=True)
             print(f"Created directory: {output_dir}")
@@ -24,8 +24,6 @@ class IoTEda:
         print("PHASE 1: FULL INTEGRATED EXPLORATORY DATA ANALYSIS")
         print("=" * 60)
 
-        # --- 1. DATA PREP & METADATA ---
-        # Define Normal classes as per RT-IoT2022 research
         normal_classes = ["Thing_Speak", "MQTT_Publish", "Wipro_bulb", "Amazon_Alexa"]
         df["Is_Attack"] = df["Attack_type"].apply(
             lambda x: 0 if x in normal_classes else 1
@@ -44,7 +42,6 @@ class IoTEda:
             f"\n[METADATA] Features: {len(numeric_cols)} | Missing: {df.isnull().sum().sum()} | Duplicates: {df.duplicated().sum()}"
         )
 
-        # Top features identified in the paper for reconstruction error
         top_features = [
             "flow_duration",
             "fwd_pkts_tot",
@@ -59,9 +56,7 @@ class IoTEda:
             "bwd_init_window_size",
         ]
 
-        # --- 2. THE 8 EDA PAGES ---
 
-        # -- Page 1: Detailed Class Distribution (Your Original Bar Chart)
         plt.figure(figsize=(12, 6))
         colors = ["#2ecc71" if x in normal_classes else "#e74c3c" for x in counts.index]
         bars = plt.bar(counts.index, counts.values, color=colors, edgecolor="white")
@@ -86,7 +81,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_1_class_dist.png", dpi=150)
         plt.close()
 
-        # -- Page 2: Normal vs Attack (Your Original Pie Chart)
         plt.figure(figsize=(8, 8))
         normal_count = df[df["Attack_type"].isin(normal_classes)].shape[0]
         attack_count = len(df) - normal_count
@@ -102,7 +96,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_2_pie_ratio.png", dpi=150)
         plt.close()
 
-        # -- Page 3: Histogram Grid (Univariate Analysis - Point 1)
         df[top_features[:9]].hist(
             bins=30, figsize=(15, 10), color="#3498db", edgecolor="black"
         )
@@ -115,7 +108,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_3_hist_grid.png", dpi=150)
         plt.close()
 
-        # -- Page 4: Bivariate Boxplots (Feature vs Quality/Label - Point 3)
         plt.figure(figsize=(15, 12))
         for i, col in enumerate(top_features[:6], 1):
             plt.subplot(3, 2, i)
@@ -132,7 +124,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_4_boxplots.png", dpi=150)
         plt.close()
 
-        # -- Page 5: Scatter Plot (Point 4)
         plt.figure(figsize=(10, 6))
         sns.scatterplot(
             data=df,
@@ -148,7 +139,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_5_scatter.png", dpi=150)
         plt.close()
 
-        # -- Page 6: Outlier Visualization (Violin Plots - Point 5)
         plt.figure(figsize=(12, 6))
         sns.violinplot(
             x="Attack_type",
@@ -165,7 +155,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_6_outliers.png", dpi=150)
         plt.close()
 
-        # -- Page 7: Correlation Heatmap (Your Original Logic - Point 7)
         plt.figure(figsize=(14, 10))
         corr = df[top_features].corr()
         mask = np.triu(np.ones_like(corr, dtype=bool))
@@ -179,7 +168,6 @@ class IoTEda:
         plt.savefig(f"{output_dir}/eda_7_correlation.png", dpi=150)
         plt.close()
 
-        # -- Page 8: Skewness Report (Numerical Analysis - Point 2)
         skew_vals = (
             df[top_features]
             .apply(lambda x: skew(x.dropna()))
@@ -188,7 +176,6 @@ class IoTEda:
         print("\n[REPORT] Skewness Values:")
         print(skew_vals)
 
-        # Save skewness to text file
         with open(f"{output_dir}/skewness_report.txt", "w") as f:
             f.write("SKEWNESS ANALYSIS REPORT\n" + "=" * 25 + "\n")
             f.write(skew_vals.to_string())
