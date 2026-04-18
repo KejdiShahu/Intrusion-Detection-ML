@@ -56,7 +56,6 @@ class IoTEda:
             "bwd_init_window_size",
         ]
 
-
         plt.figure(figsize=(12, 6))
         colors = ["#2ecc71" if x in normal_classes else "#e74c3c" for x in counts.index]
         bars = plt.bar(counts.index, counts.values, color=colors, edgecolor="white")

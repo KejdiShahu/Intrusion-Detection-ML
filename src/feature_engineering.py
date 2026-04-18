@@ -74,7 +74,7 @@ class IoTFeatureEngineer:
         return X_scaled
 
     def fit_transform_with_labels(
-        self, df: pd.DataFrame, label_col: str = "is_attack"
+            self, df: pd.DataFrame, label_col: str = "is_attack"
     ) -> tuple:
         y = df[label_col].reset_index(drop=True) if label_col in df.columns else None
         X_scaled = self.fit_transform(df)
@@ -227,7 +227,7 @@ class IoTFeatureEngineer:
         fe["pkt_rate_ratio"] = fe["fwd_pkts_per_sec"] / (fe["bwd_pkts_per_sec"] + 1)
         fe["total_pkts"] = fe["fwd_pkts_tot"] + fe["bwd_pkts_tot"]
         fe["pkt_imbalance"] = abs(fe["fwd_pkts_tot"] - fe["bwd_pkts_tot"]) / (
-            fe["total_pkts"] + 1
+                fe["total_pkts"] + 1
         )
         self.group1 = [
             "pkt_ratio",
@@ -238,16 +238,16 @@ class IoTFeatureEngineer:
         ]
 
         fe["payload_ratio"] = fe["fwd_pkts_payload.avg"] / (
-            fe["bwd_pkts_payload.avg"] + 1
+                fe["bwd_pkts_payload.avg"] + 1
         )
         fe["total_payload_bytes"] = (
-            fe["fwd_pkts_payload.tot"] + fe["bwd_pkts_payload.tot"]
+                fe["fwd_pkts_payload.tot"] + fe["bwd_pkts_payload.tot"]
         )
         fe["payload_imbalance"] = abs(
             fe["fwd_pkts_payload.avg"] - fe["bwd_pkts_payload.avg"]
         ) / (fe["flow_pkts_payload.avg"] + 1)
         fe["payload_variability"] = fe["flow_pkts_payload.std"] / (
-            fe["flow_pkts_payload.avg"] + 1
+                fe["flow_pkts_payload.avg"] + 1
         )
         fe["bytes_per_pkt"] = fe["total_payload_bytes"] / (fe["total_pkts"] + 1)
         self.group2 = [
@@ -272,17 +272,17 @@ class IoTFeatureEngineer:
         ]
 
         fe["syn_ack_ratio"] = fe["flow_SYN_flag_count"] / (
-            fe["flow_ACK_flag_count"] + 1
+                fe["flow_ACK_flag_count"] + 1
         )
         fe["rst_ratio"] = fe["flow_RST_flag_count"] / (fe["total_pkts"] + 1)
         fe["fin_ratio"] = fe["flow_FIN_flag_count"] / (fe["total_pkts"] + 1)
         fe["total_flags"] = (
-            fe["flow_SYN_flag_count"]
-            + fe["flow_ACK_flag_count"]
-            + fe["flow_FIN_flag_count"]
-            + fe["flow_RST_flag_count"]
-            + fe["flow_CWR_flag_count"]
-            + fe["flow_ECE_flag_count"]
+                fe["flow_SYN_flag_count"]
+                + fe["flow_ACK_flag_count"]
+                + fe["flow_FIN_flag_count"]
+                + fe["flow_RST_flag_count"]
+                + fe["flow_CWR_flag_count"]
+                + fe["flow_ECE_flag_count"]
         )
         fe["flag_density"] = fe["total_flags"] / (fe["total_pkts"] + 1)
         self.group4 = [
@@ -326,7 +326,7 @@ class IoTFeatureEngineer:
         fe["total_bulk_bytes"] = fe["fwd_bulk_bytes"] + fe["bwd_bulk_bytes"]
         fe["subflow_pkt_ratio"] = fe["fwd_subflow_pkts"] / (fe["bwd_subflow_pkts"] + 1)
         fe["subflow_byte_ratio"] = fe["fwd_subflow_bytes"] / (
-            fe["bwd_subflow_bytes"] + 1
+                fe["bwd_subflow_bytes"] + 1
         )
         self.group7 = [
             "bulk_ratio",
@@ -340,13 +340,13 @@ class IoTFeatureEngineer:
 
     def _resolve_final_features(self, fe: pd.DataFrame) -> None:
         all_engineered = (
-            self.group1
-            + self.group2
-            + self.group3
-            + self.group4
-            + self.group5
-            + self.group6
-            + self.group7
+                self.group1
+                + self.group2
+                + self.group3
+                + self.group4
+                + self.group5
+                + self.group6
+                + self.group7
         )
         combined = list(dict.fromkeys(self.paper_features + all_engineered))
         self.final_features = [f for f in combined if f in fe.columns]
